@@ -56,9 +56,9 @@ const generateChatResponse = async (req, res) => {
             console.log(`🔎 Vector Search: Top score is ${searchResults.matches[0].score} for query: "${message}"`);
 
             // Check top score for fallback logic - Lowered to 0.4 to be more inclusive
-            if (searchResults.matches[0].score < 0.4) {
+            if (searchResults.matches[0].score < 0.3) {
                 isLowConfidence = true;
-                console.log(`⚠️ Subtle match (below 0.4). Using natural fallback.`);
+                console.log(`⚠️ Subtle match (below 0.3). Using natural fallback.`);
             }
 
             searchResults.matches.forEach((match) => {
@@ -71,25 +71,22 @@ const generateChatResponse = async (req, res) => {
         }
 
         // 3. System Prompt & Context Injection (Invisible & Natural)
+        // We always provide the context, but we adjust the instruction based on confidence.
         let systemPrompt = `You are the GrowthEdge Executive Assistant. You are highly intelligent, professional, and possess deep internal knowledge of GrowthEdge's business strategies.
 
 YOUR VOICE:
 - Speak as if you naturally know everything in the context below. 
+- ALWAYS prioritize the information in the KNOWLEDGE BASE below.
+- If the user asks for "Our Services", provide the exact list found in the context (Business Growth Strategy, Digital Marketing, etc.).
 - NEVER mention "files", "documents", "context", "internal data", or "the provided text".
 - Do not say "Based on what I have available..." — just answer directly.
 - Be concise, confident, and executive-level.
 
 KNOWLEDGE BASE:
-${contextText}`;
+${contextText || "No internal data found for this query."}`;
 
         if (isLowConfidence) {
-            systemPrompt = `You are the GrowthEdge Executive Assistant. 
-If the user asks something outside our specific business niche, provide a professional and helpful business perspective without sounding like a robot. 
-
-RULES:
-1. NEVER say "I couldn't find a reference" or "I don't have those files".
-2. Just answer the question directly with professional poise.
-3. If it is a very specific fact you truly don't know, say: "I'll need to double-check the specific figures for that, but generally speaking..." followed by a smart answer.`;
+            systemPrompt += `\n\nFallback: If specific facts are missing, answer using deep business logic while maintaining the GrowthEdge brand voice.`;
         }
 
         // Target whichever model user passed or default to a free one
