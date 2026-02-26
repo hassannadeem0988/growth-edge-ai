@@ -13,6 +13,10 @@ const connectDB = require('./config/db');
 // Load environment variables from .env file
 dotenv.config();
 
+const app = express();
+app.set('trust proxy', 1); // Required for cookies to work on Vercel
+const PORT = process.env.PORT || 5000;
+
 // Connect to MongoDB
 connectDB().then(async () => {
     if (process.env.NODE_ENV === 'production') {
@@ -36,12 +40,17 @@ connectDB().then(async () => {
     }
 }).catch(err => console.error("🚨 AUTO-SEED ERROR:", err));
 
-const app = express();
-const PORT = process.env.PORT || 5000;
 
 // --- Middleware ---
 app.use(cors({
-    origin: true, // This allows the origin that sent the request
+    origin: function (origin, callback) {
+        // Allow any Vercel domain or localhost
+        if (!origin || origin.includes('vercel.app') || origin.includes('localhost')) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true,
 }));
 app.use(express.json());
