@@ -7,12 +7,17 @@ const connectDB = async () => {
         }
 
         const conn = await mongoose.connect(process.env.MONGO_URI, {
-            serverSelectionTimeoutMS: 5000, // 5 seconds
-            connectTimeoutMS: 10000,        // 10 seconds
+            serverSelectionTimeoutMS: 8000,
+            connectTimeoutMS: 10000,
+            dbName: 'growthedge', // Explicitly set the DB name
+            bufferCommands: false // Disable buffering - fail fast if not connected
         });
         console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
     } catch (error) {
-        console.error(`🚨 MongoDB Connection Error: ${error.message}`);
+        // Masking the URI for safety but logging the attempt
+        const maskedURI = process.env.MONGO_URI ? process.env.MONGO_URI.replace(/:.+@/, ':****@') : 'MISSING';
+        console.error(`🚨 MongoDB Connection Error! Attempted URI: ${maskedURI}`);
+        console.error(`🚨 Message: ${error.message}`);
     }
 };
 
