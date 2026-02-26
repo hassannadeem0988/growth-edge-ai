@@ -66,6 +66,8 @@ const generateChatResponse = async (req, res) => {
                     contextText += `\n\n${match.metadata.text}`;
                 }
             });
+
+            console.log(`📑 Context Snippet: ${contextText.substring(0, 100)}...`);
         } else {
             isLowConfidence = true;
         }
