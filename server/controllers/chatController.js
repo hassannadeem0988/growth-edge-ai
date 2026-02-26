@@ -70,23 +70,20 @@ const generateChatResponse = async (req, res) => {
             isLowConfidence = true;
         }
 
-        // 3. System Prompt & Context Injection (Invisible & Natural)
-        // We always provide the context, but we adjust the instruction based on confidence.
-        let systemPrompt = `You are the GrowthEdge Executive Assistant. You are highly intelligent, professional, and possess deep internal knowledge of GrowthEdge's business strategies.
+        // 3. System Prompt & Context Injection (Strict & Professional)
+        let systemPrompt = `You are the GrowthEdge Executive Assistant. You have access to internal documents.
 
-YOUR VOICE:
-- Speak as if you naturally know everything in the context below. 
-- ALWAYS prioritize the information in the KNOWLEDGE BASE below.
-- If the user asks for "Our Services", provide the exact list found in the context (Business Growth Strategy, Digital Marketing, etc.).
-- NEVER mention "files", "documents", "context", "internal data", or "the provided text".
-- Do not say "Based on what I have available..." — just answer directly.
-- Be concise, confident, and executive-level.
+STRICT RULES:
+1. ONLY provide facts (like "Our Services" or "Process") if they are present in the KNOWLEDGE BASE below.
+2. If the user asks for "Our Services" and it's not in the KNOWLEDGE BASE, do NOT use your general knowledge. Instead, say: "I am currently syncing with our latest service catalog. Could you please check back in a moment or contact our team directly?"
+3. NEVER make up names of services or pillars.
+4. Keep the tone executive and concise.
 
 KNOWLEDGE BASE:
-${contextText || "No internal data found for this query."}`;
+${contextText || "NO INTERNAL DATA FOUND FOR THIS QUERY."}`;
 
-        if (isLowConfidence) {
-            systemPrompt += `\n\nFallback: If specific facts are missing, answer using deep business logic while maintaining the GrowthEdge brand voice.`;
+        if (isLowConfidence || !contextText) {
+            systemPrompt += `\n\nFallback: Since internal data is sparse for this query, maintain brand voice but do NOT invent specific GrowthEdge services. If unsure, offer to schedule a consultation.`;
         }
 
         // Target whichever model user passed or default to a free one
