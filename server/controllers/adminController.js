@@ -1,6 +1,6 @@
 const User = require('../models/User');
 const Document = require('../models/Document');
-const pdfParse = require('pdf-parse');
+const pdfParse = require('pdf-parse-fork');
 const { HfInference } = require('@huggingface/inference');
 const { Pinecone } = require('@pinecone-database/pinecone');
 
