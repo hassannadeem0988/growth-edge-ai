@@ -1,0 +1,13 @@
+// =============================================
+// GrowthEdge AI Assistant — /client/src/components
+// =============================================
+// This folder will contain all reusable UI components.
+//
+// Planned components (Phase 2+):
+//   - Sidebar.tsx         → Left nav (Chat, History, Knowledge Base)
+//   - MessageBubble.tsx   → User and AI chat messages
+//   - UsageTracker.tsx    → Progress bar showing messages used
+//   - QuickActions.tsx    → Draft Email, Summarize PDF, etc.
+//   - LoadingSpinner.tsx  → Animated loading state
+//
+// DO NOT add components here until Phase 2 is started.

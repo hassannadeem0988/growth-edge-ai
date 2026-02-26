@@ -1,0 +1,29 @@
+{
+    "name": "growthedge-server",
+    "version": "1.0.0",
+    "description": "GrowthEdge AI Assistant — Express.js Backend",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "dev": "nodemon index.js",
+        "seed": "node scripts/seed.js"
+    },
+    "dependencies": {
+        "@huggingface/inference": "^4.13.13",
+        "@pinecone-database/pinecone": "^2.0.1",
+        "bcryptjs": "^2.4.3",
+        "cookie-parser": "^1.4.7",
+        "cors": "^2.8.5",
+        "dotenv": "^16.4.1",
+        "express": "^4.18.2",
+        "jsonwebtoken": "^9.0.2",
+        "mongoose": "^8.1.0",
+        "multer": "^2.0.2",
+        "openai": "^4.28.0",
+        "pdf-parse": "^2.4.5"
+    },
+    "devDependencies": {
+        "nodemon": "^3.0.3"
+    },
+    "license": "PRIVATE"
+}

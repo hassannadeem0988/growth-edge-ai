@@ -1,0 +1,11 @@
+// =============================================
+// GrowthEdge AI Assistant — /client/src/utils
+// =============================================
+// This folder will contain frontend helper functions.
+//
+// Planned utilities (Phase 2+):
+//   - api.ts         → Axios instance configured with NEXT_PUBLIC_API_URL
+//   - formatDate.ts  → Timestamp formatting helpers
+//   - constants.ts   → App-wide constants
+//
+// DO NOT add utilities here until Phase 2 is started.

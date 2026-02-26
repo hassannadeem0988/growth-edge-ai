@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #F4F6F8;
+    --foreground: #1C2331;
+  }
+}
+
+@layer utilities {
+  .btn-primary {
+    @apply bg-primary text-white font-semibold rounded-md transition-all hover:bg-[#2874A6] active:translate-y-0 hover:-translate-y-[1px];
+  }
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #85C1E9;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2E86C1;
+}
