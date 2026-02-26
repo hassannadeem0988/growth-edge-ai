@@ -17,11 +17,17 @@ const app = express();
 app.set('trust proxy', 1); // Required for cookies to work on Vercel
 const PORT = process.env.PORT || 5000;
 
-// Connect to MongoDB
-connectDB();
-
-
 // --- Middleware ---
+// 1. Database Connection (Ensures DB is ready before routes)
+app.use(async (req, res, next) => {
+    try {
+        await connectDB();
+        next();
+    } catch (err) {
+        res.status(500).json({ message: "Database connection failed", error: err.message });
+    }
+});
+
 app.use(cors({
     origin: function (origin, callback) {
         // Allow any Vercel domain or localhost
