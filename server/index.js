@@ -34,7 +34,7 @@ connectDB().then(async () => {
             }
         }
     }
-});
+}).catch(err => console.error("🚨 AUTO-SEED ERROR:", err));
 
 const app = express();
 const PORT = process.env.PORT || 5000;

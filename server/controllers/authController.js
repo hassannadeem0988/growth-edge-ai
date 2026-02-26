@@ -43,8 +43,8 @@ const registerUser = async (req, res) => {
             // Set HTTP-only cookie
             res.cookie('jwt', token, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: 'strict',
+                secure: true,
+                sameSite: 'none',
                 maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
             });
 
@@ -73,16 +73,22 @@ const loginUser = async (req, res) => {
         const user = await User.findOne({ email });
 
         if (user && (await bcrypt.compare(password, user.password))) {
+            if (!process.env.JWT_SECRET) {
+                console.error('🚨 JWT_SECRET is missing in environment variables!');
+                return res.status(500).json({ message: 'Server configuration error' });
+            }
+
             const token = generateToken(user._id);
 
             // Set HTTP-only cookie
             res.cookie('jwt', token, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: 'strict',
-                maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+                secure: true, // Always secure for Vercel
+                sameSite: 'none', // Required for cross-site cookies between diff vercel domains
+                maxAge: 30 * 24 * 60 * 60 * 1000,
             });
 
+            console.log(`✅ Login successful for: ${user.email}`);
             res.json({
                 _id: user.id,
                 email: user.email,
@@ -93,6 +99,7 @@ const loginUser = async (req, res) => {
             res.status(401).json({ message: 'Invalid credentials' });
         }
     } catch (error) {
+        console.error('🚨 LOGIN ERROR:', error.stack || error.message);
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
