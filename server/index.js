@@ -14,7 +14,27 @@ const connectDB = require('./config/db');
 dotenv.config();
 
 // Connect to MongoDB
-connectDB();
+connectDB().then(async () => {
+    if (process.env.NODE_ENV === 'production') {
+        const User = require('./models/User');
+        const bcrypt = require('bcryptjs');
+
+        const seedUsers = [
+            { email: 'hass_admin@growthedge.co', password: 'GE_Admin_Secure_99!', role: 'admin' },
+            { email: 'ali_employee@growthedge.co', password: 'GE_Staff_Access_77!', role: 'user' }
+        ];
+
+        for (const u of seedUsers) {
+            const exists = await User.findOne({ email: u.email });
+            if (!exists) {
+                const salt = await bcrypt.genSalt(10);
+                const hashedPassword = await bcrypt.hash(u.password, salt);
+                await User.create({ ...u, password: hashedPassword });
+                console.log(`✅ Auto-seeded: ${u.email}`);
+            }
+        }
+    }
+});
 
 const app = express();
 const PORT = process.env.PORT || 5000;
